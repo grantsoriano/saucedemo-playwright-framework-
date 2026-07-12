@@ -1,6 +1,6 @@
 # SauceDemo Test Automation Framework
 
-<!-- One-line pitch goes here -->
+End-to-end test automation framework for [SauceDemo](https://www.saucedemo.com), built with Playwright and TypeScript, covering UI, visual regression, and CI/CD reporting.
 
 [![CI](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml)
 
@@ -10,27 +10,66 @@
 
 ## Tech Stack
 
-<!-- Reuse the tech stack table -->
+| Purpose               | Tool                             |
+| --------------------- | -------------------------------- |
+| Automation            | Playwright                       |
+| Language              | TypeScript                       |
+| IDE                   | VS Code                          |
+| Version Control       | Git                              |
+| Repository            | GitHub                           |
+| CI/CD                 | GitHub Actions                   |
+| Reporting             | Playwright HTML Report           |
+| Advanced Reporting    | Allure                           |
+| Linting               | ESLint                           |
+| Formatting            | Prettier                         |
+| Environment Variables | dotenv                           |
+| Package Manager       | pnpm                             |
+| Git Hooks             | Husky + lint-staged + commitlint |
 
 ## Architecture
 
-<!-- POM structure, fixtures, folder layout explanation -->
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of how test specs, page objects, fixtures, configuration, and CI/CD fit together, including a diagram.
 
 ## Getting Started
 
-<!-- Prerequisites, installation steps -->
+**Prerequisites:** Node.js 20+ (see `.nvmrc`), pnpm
+
+```bash
+pnpm install
+pnpm exec playwright install chromium
+cp .env.example .env
+```
 
 ## Running Tests
 
-<!-- Commands to run all tests, by tag (@smoke, @regression), headed/headless -->
+```bash
+pnpm test              # run all tests, headless
+pnpm test:headed       # run all tests, headed browser
+pnpm test:debug        # run in Playwright debug mode
+pnpm test:ui           # open Playwright's interactive UI mode
+pnpm test:smoke        # run only @smoke tagged tests
+pnpm test:regression   # run only @regression tagged tests
+```
 
 ## Reporting
 
-<!-- How to view Playwright HTML report and Allure report -->
+```bash
+pnpm report                              # open the Playwright HTML report
+pnpm allure:generate && pnpm allure:open # generate and open the Allure report
+```
+
+Both reports are also published automatically on every push to `main` — see the **Live Reports** links at the top of this file.
 
 ## CI/CD
 
-<!-- GitHub Actions badge + explanation of pipeline -->
+Every push and pull request to `main` triggers the GitHub Actions pipeline (`.github/workflows/ci.yml`), which:
+
+1. Installs dependencies (pnpm)
+2. Lints and checks formatting
+3. Installs the Chromium browser
+4. Runs the full test suite
+5. Generates the Allure report
+6. On push to `main` only: publishes the combined report site to GitHub Pages
 
 <!--
 One-time setup for report publishing:
@@ -41,8 +80,8 @@ One-time setup for report publishing:
 
 ## Test Coverage
 
-<!-- Summary of what's covered: login, inventory, cart, checkout, visual -->
+Test scenarios span 6 feature areas: **login, inventory, cart, checkout, e2e, visual** — tagged `@smoke` / `@regression` / `@visual` for selective execution. Covers happy paths, validation/negative cases, and cross-feature purchase journeys.
 
 ## Design Decisions
 
-<!-- Why this structure, notable tradeoffs -->
+See [DESIGN_DECISIONS.md](./DESIGN_DECISIONS.md) for the reasoning behind key architectural choices (POM, folder structure, dual reporting, quality gates, retry strategy, and more).
