@@ -1,8 +1,37 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
 
 # Playwright
-node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
+
+# Allure
+allure-results/
+allure-report/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# TypeScript
+*.tsbuildinfo
