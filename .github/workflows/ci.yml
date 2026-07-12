@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run tests
+        id: run_tests
+        run: pnpm test
+        continue-on-error: true
+
+      - name: Generate Allure report
+        if: always()
+        run: pnpm allure:generate
+
+      - name: Build combined report site
+        if: always()
+        run: |
+          mkdir -p report-site
+          cp -r playwright-report report-site/playwright-report
+          cp -r allure-report report-site/allure-report
+          cat <<'EOF' > report-site/index.html
+          <!DOCTYPE html>
+          <html>
+            <head><title>SauceDemo Test Reports</title></head>
+            <body style="font-family: sans-serif; padding: 2rem;">
+              <h1>SauceDemo Test Automation Reports</h1>
+              <ul>
+                <li><a href="./playwright-report/index.html">Playwright HTML Report</a></li>
+                <li><a href="./allure-report/index.html">Allure Report</a></li>
+              </ul>
+            </body>
+          </html>
+          EOF
+
+      - name: Upload Playwright report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Allure report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 14
+
+      - name: Deploy reports to GitHub Pages
+        if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./report-site
+
+      - name: Fail job if tests failed
+        if: steps.run_tests.outcome == 'failure'
+        run: exit 1
