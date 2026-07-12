@@ -1,7 +1,7 @@
-const tseslint = require('typescript-eslint');
-const playwright = require('eslint-plugin-playwright');
+import tseslint from 'typescript-eslint';
+import playwright from 'eslint-plugin-playwright';
 
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     ignores: [
       'node_modules/**',
