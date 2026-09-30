@@ -28,6 +28,7 @@ End-to-end test automation framework for [SauceDemo](https://www.saucedemo.com),
 
 ## Architecture
 
+~~
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of how test specs, page objects, fixtures, configuration, and CI/CD fit together, including a diagram.
 
 ## Getting Started
@@ -70,6 +71,7 @@ Every push and pull request to `main` triggers the GitHub Actions pipeline (`.gi
 4. Runs the full test suite
 5. Generates the Allure report
 6. On push to `main` only: publishes the combined report site to GitHub Pages
+7. Git push to main when only if
 
 <!--
 One-time setup for report publishing:
